@@ -12,7 +12,8 @@ import itertools
 from utility import add_date
 
 
-def crosswalk_works(orcid_profile, person_uri, graph):
+def crosswalk_works(orcid_profile, person_uri, graph, subjectlist, journlist, orglist):
+
     person_surname = orcid_profile["orcid-profile"]["orcid-bio"]["personal-details"]["family-name"]["value"]
 
     #Publications
@@ -81,10 +82,17 @@ def crosswalk_works(orcid_profile, person_uri, graph):
             #Subjects
             if subjects:
                 for subject in subjects:
-                    subject_uri = ns.D[to_hash_identifier("sub", (subject,))]
-                    graph.add((work_uri, VIVO.hasSubjectArea, subject_uri))
-                    graph.add((subject_uri, RDF.type, SKOS.Concept))
-                    graph.add((subject_uri, RDFS.label, Literal(subject)))
+                    if subject in subjectlist[0]:
+                        match = subjectlist[0].index(subject)
+                        subject_uri = subjectlist[1][match]
+                        graph.add((work_uri, VIVO.hasSubjectArea, subject_uri))
+                    else:
+                        subject_uri = ns.D[to_hash_identifier("sub", (subject,))]
+                        subjectlist[0].append(subject)
+                        subjectlist[1].append(subject_uri)
+                        graph.add((work_uri, VIVO.hasSubjectArea, subject_uri))
+                        graph.add((subject_uri, RDF.type, SKOS.Concept))
+                        graph.add((subject_uri, RDFS.label, Literal(subject)))
             #Identifier
             if doi:
                 graph.add((work_uri, BIBO.doi, Literal(doi)))
@@ -102,10 +110,18 @@ def crosswalk_works(orcid_profile, person_uri, graph):
 
             #Publisher
             if publisher:
-                publisher_uri = ns.D[to_hash_identifier(PREFIX_ORGANIZATION, (publisher,))]
-                graph.add((publisher_uri, RDF.type, FOAF.Organization))
-                graph.add((publisher_uri, RDFS.label, Literal(publisher)))
-                graph.add((work_uri, VIVO.publisher, publisher_uri))
+                if publisher in orglist[0]:
+                    match = orglist[0].index(publisher)
+                    publisher_uri = orglist[1][match]
+                    graph.add((work_uri, VIVO.publisher, publisher_uri))
+
+                else:
+                    publisher_uri = ns.D[to_hash_identifier(PREFIX_ORGANIZATION, (publisher,))]
+                    orglist[0].append(publisher)
+                    orglist[1].append(publisher_uri)
+                    graph.add((publisher_uri, RDF.type, FOAF.Organization))
+                    graph.add((publisher_uri, RDFS.label, Literal(publisher)))
+                    graph.add((work_uri, VIVO.publisher, publisher_uri))
 
             if work_type == "JOURNAL_ARTICLE":
                 ##Extract
@@ -127,10 +143,17 @@ def crosswalk_works(orcid_profile, person_uri, graph):
                 graph.add((work_uri, RDF.type, BIBO.AcademicArticle))
                 #Journal
                 if journal:
-                    journal_uri = ns.D[to_hash_identifier(PREFIX_JOURNAL, (BIBO.Journal, journal))]
-                    graph.add((journal_uri, RDF.type, BIBO.Journal))
-                    graph.add((journal_uri, RDFS.label, Literal(journal)))
-                    graph.add((work_uri, VIVO.hasPublicationVenue, journal_uri))
+                    if journal in journlist[0]:
+                        match = journlist[0].index(journal)
+                        journal_uri = journlist[1][match]
+                        graph.add((work_uri, VIVO.hasPublicationVenue, journal_uri))
+                    else:
+                        journal_uri = ns.D[to_hash_identifier(PREFIX_JOURNAL, (BIBO.Journal, journal))]
+                        journlist[0].append(journal)
+                        journlist[1].append(journal_uri)
+                        graph.add((journal_uri, RDF.type, BIBO.Journal))
+                        graph.add((journal_uri, RDFS.label, Literal(journal)))
+                        graph.add((work_uri, VIVO.hasPublicationVenue, journal_uri))
 
                 #Volume
                 if volume:

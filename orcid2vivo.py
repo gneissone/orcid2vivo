@@ -1,3 +1,4 @@
+
 import requests
 import argparse
 import codecs
@@ -13,6 +14,9 @@ import app.vivo_namespace as ns
 
 
 def crosswalk(orcid_id, vivo_person_id=None, person_class=None, skip_person=False, namespace=None):
+    subjectlist = [[],[]]
+    journlist = [[],[]]
+    orglist = [[],[]]
 
     #Set default VIVO namespace
     if namespace:
@@ -35,7 +39,7 @@ def crosswalk(orcid_id, vivo_person_id=None, person_class=None, skip_person=Fals
     graph.add((person_uri, VIVO.orcidId, Literal("http://orcid.org/%s" % orcid_id)))
 
     crosswalk_bio(orcid_profile, person_uri, graph, person_class=person_clazz, skip_person=skip_person)
-    crosswalk_works(orcid_profile, person_uri, graph)
+    crosswalk_works(orcid_profile, person_uri, graph,subjectlist,journlist,orglist)
     crosswalk_affiliations(orcid_profile, person_uri, graph)
     crosswalk_funding(orcid_profile, person_uri, graph)
 
