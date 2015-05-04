@@ -1,5 +1,5 @@
 # orcid2vivo
-##About this fork
+## About this fork
 This fork includes some small modifications to the orcid2vivo script created by GWU's Justin Littman. Namely, URI generation is performed by generating a random number and calling the VIVO Query API to ensure it does not already exist. Additionally, the script has been changed to only create one new SKOS concept, journal, or publisher rather than numerous identical objects. Original readme below...
 ---
 Proof of concept code for retrieving data from the ORCID API and crosswalking to VIVO-ISF.
