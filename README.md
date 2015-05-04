@@ -1,4 +1,7 @@
 # orcid2vivo
+##About this fork
+This fork includes some small modifications to the orcid2vivo script created by GWU's Justin Littman. Namely, URI generation is performed by generating a random number and calling the VIVO Query API to ensure it does not already exist. Additionally, the script has been changed to only create one new SKOS concept, journal, or publisher rather than numerous identical objects. Original readme below...
+---
 Proof of concept code for retrieving data from the ORCID API and crosswalking to VIVO-ISF.
 
 Try it at  http://gw-orcid2vivo.wrlc.org/orcid2vivo
@@ -14,7 +17,7 @@ Try it at  http://gw-orcid2vivo.wrlc.org/orcid2vivo
     * An id for the person.
     * Class for the person.
 
-    
+
 ```
 
 (ENV)GLSS-F0G5RP:orcid2vivo justinlittman$ python orcid2vivo.py -h
@@ -51,7 +54,7 @@ optional arguments:
                         a FOAF Person.
   --skip-person         Skip adding triples declaring the person and the
                         person's name
-                        
+
 ```
 
 For example:
@@ -65,7 +68,7 @@ For example:
     * download
     * load to VIVO instance (via SPARQL Update)
 * Also supports outputting of ORCID profile to web page.
-* Can be invoked from web form and http client. 
+* Can be invoked from web form and http client.
 * Supports multiple RDF serializations.
 * Allows specifying:
     * VIVO namespace
@@ -136,4 +139,4 @@ The web form will now be available at http://localhost:5000/.  (Note:  If using 
 
 ##Other:
 * Feedback / tickets / pull requests welcome.
-* Consider using with [vivo-docker](https://github.com/gwu-libraries/vivo-docker) to put together an environment for experimenting with crosswalking ORCID to VIVO. 
+* Consider using with [vivo-docker](https://github.com/gwu-libraries/vivo-docker) to put together an environment for experimenting with crosswalking ORCID to VIVO.
