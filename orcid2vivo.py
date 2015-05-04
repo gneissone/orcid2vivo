@@ -14,6 +14,7 @@ import app.vivo_namespace as ns
 
 
 def crosswalk(orcid_id, vivo_person_id=None, person_class=None, skip_person=False, namespace=None):
+    #Create persistant lists to track created objects
     subjectlist = [[],[]]
     journlist = [[],[]]
     orglist = [[],[]]
