@@ -42,7 +42,7 @@ def crosswalk(orcid_id, vivo_person_id=None, person_class=None, skip_person=Fals
     crosswalk_bio(orcid_profile, person_uri, graph, person_class=person_clazz, skip_person=skip_person)
     crosswalk_works(orcid_profile, person_uri, graph,subjectlist,journlist,orglist)
     crosswalk_affiliations(orcid_profile, person_uri, graph)
-    crosswalk_funding(orcid_profile, person_uri, graph)
+    crosswalk_funding(orcid_profile, person_uri, graph, orglist)
 
     return graph, orcid_profile, person_uri
 
