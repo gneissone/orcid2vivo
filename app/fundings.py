@@ -5,7 +5,7 @@ from rdflib import RDF, RDFS, XSD, Literal
 from utility import add_date, add_date_interval
 
 
-def crosswalk_funding(orcid_profile, person_uri, graph):
+def crosswalk_funding(orcid_profile, person_uri, graph, orglist):
     if "funding-list" in orcid_profile["orcid-profile"]["orcid-activities"] \
             and orcid_profile["orcid-profile"]["orcid-activities"]["funding-list"] \
             and "funding" in orcid_profile["orcid-profile"]["orcid-activities"]["funding-list"]:
@@ -69,10 +69,17 @@ def crosswalk_funding(orcid_profile, person_uri, graph):
                 #Awarded by
                 if "organization" in funding:
                     organization_name = funding["organization"]["name"]
-                    organization_uri = ns.D[to_hash_identifier(PREFIX_ORGANIZATION, (organization_name,))]
-                    graph.add((organization_uri, RDF.type, FOAF.Organization))
-                    graph.add((organization_uri, RDFS.label, Literal(organization_name)))
-                    graph.add((grant_uri, VIVO.assignedBy, organization_uri))
+                    if organization_name in orglist[0]:
+                        match = orglist[0].index(organization_name)
+                        organization_uri = orglist[1][match]
+                        graph.add((grant_uri, VIVO.assignedBy, organization_uri))
+                    else:
+                        organization_uri = ns.D[to_hash_identifier(PREFIX_ORGANIZATION, (organization_name,))]
+                        orglist[0].append(organization_name)
+                        orglist[1].append(organization_uri)
+                        graph.add((organization_uri, RDF.type, FOAF.Organization))
+                        graph.add((organization_uri, RDFS.label, Literal(organization_name)))
+                        graph.add((grant_uri, VIVO.assignedBy, organization_uri))
 
                 #Identifiers
                 if "funding-external-identifiers" in funding:
